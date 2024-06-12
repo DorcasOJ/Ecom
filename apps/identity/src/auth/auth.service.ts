@@ -248,6 +248,7 @@ export class AuthService {
           email: newUser.email,
           firstName: newUser.firstName,
           lastName: newUser.lastName,
+          isEmailVerified: newUser.isEmailVerified,
         };
       } else {
         const tokens = await this.jwtHelperService.googleUserTokens(
@@ -263,6 +264,7 @@ export class AuthService {
           email: googleUser.email,
           firstName: googleUser.firstName,
           lastName: googleUser.lastName,
+          isEmailVerified: googleUser.isEmailVerified,
         };
       }
     } catch (error) {
