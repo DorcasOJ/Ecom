@@ -43,7 +43,7 @@ export class ProfileController {
 
   @Patch(':profileId')
   //   @IdCheck('profileId')
-  @UseGuards(AuthorizationGuard)
+  // @UseGuards(AuthorizationGuard)
   @ApiOperation({ summary: 'Update an existing profile' })
   async updateProfile(
     @Param('profileId', ParseUUIDPipe) profileId: string,
@@ -59,7 +59,7 @@ export class ProfileController {
 
   @Delete('/profileId')
   //   @IdCheck('profileId')
-  @UseGuards(AuthorizationGuard)
+  // @UseGuards(AuthorizationGuard)
   @ApiOperation({ summary: 'delete an existing profile' })
   async deleteOne(
     @Param('profileId', ParseUUIDPipe) profileId: string,

@@ -25,12 +25,12 @@ export const configConstant = {
     reset_secret: 'RESET_SECRET',
     verify_secret: 'JWT_VERIFICATION_TOKEN_SECRET',
   },
-  amq: {
-    url: 'RABBITMQ_URL',
-    identity_queue: 'IDENTITY_QUEUE',
-    notify_queue: 'NOTIFY_QUEUE',
-    durable: 'RABBITMQ_DURABLE',
-  },
+  // amq: {
+  //   url: 'RABBITMQ_URL',
+  //   identity_queue: 'IDENTITY_QUEUE',
+  //   notify_queue: 'NOTIFY_QUEUE',
+  //   durable: 'RABBITMQ_DURABLE',
+  // },
   google: {
     clientID: 'GOOGLE_CLIENT_ID',
     secretID: 'GOOGLE_CLIENT_SECRET',

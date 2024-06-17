@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsOptional, IsString } from 'class-validator';
 import { UserInfo } from '../../users/dto/user-info.dto';
 
-export class oAuthDto {
+export class OAuthDto {
   @IsString()
   @ApiProperty()
   token: string;

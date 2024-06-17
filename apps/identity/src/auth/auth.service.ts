@@ -22,10 +22,13 @@ import { SigninUserDto } from './dto/signin-user.dto';
 import { EmailVerificationService } from '../email-verification/email-verification.service';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { UserInfo } from '../users/dto/user-info.dto';
-import { oAuthDto } from './dto/oauth.dto';
+import { OAuthDto } from './dto/oauth.dto';
 // import { Auth, google } from 'googleapis';
 import { OAuth2Client } from 'google-auth-library';
 import { v4 as uuidv4 } from 'uuid';
+import { PasswordResetDto } from './dto/password-reset.dto';
+import { HttpService } from '@nestjs/axios';
+import { lastValueFrom } from 'rxjs';
 
 @Injectable()
 export class AuthService {
@@ -39,6 +42,7 @@ export class AuthService {
     private jwtHelperService: JwtHelperService,
     private emailVerificationService: EmailVerificationService,
     private readonly configService: ConfigService,
+    private readonly httpService: HttpService,
   ) {}
 
   async signup(user: CreateUserDto): Promise<any> {
@@ -179,6 +183,10 @@ export class AuthService {
     }
   }
 
+  async getNewTokens(refreshToken: string) {
+    return await this.jwtHelperService.getNewTokens(refreshToken);
+  }
+
   async createLoginHistory(userInfo: UserInfo, user: Users) {
     const createHistory = this.userHistoryRepo.create({
       // login_time: userInfo.login_time,
@@ -199,7 +207,7 @@ export class AuthService {
    */
 
   async googleSignin(
-    dto: oAuthDto,
+    dto: OAuthDto,
     values: { userAgent: string; ipAddress: string },
   ) {
     try {
@@ -322,7 +330,6 @@ export class AuthService {
           ),
         );
       }
-
       const newPasswordHash = await this.jwtHelperService.hashPassword(
         dto.newPassword,
         password.split(':')[0],
@@ -351,7 +358,6 @@ export class AuthService {
           ),
         );
       }
-
       // sign a token and check if it already exist
       const existingToken = await this.jwtHelperService.signReset({
         id: user.id,
@@ -365,10 +371,8 @@ export class AuthService {
       const otp = Math.floor(Math.random() * 899999 + 100000).toString();
 
       const emailPayload = {
-        userId: user.id,
-        userEmail: user.email,
-        username: user.firstName,
-        otp,
+        user: user,
+        otp: otp,
       };
 
       const success = await this.emailVerificationService.sendResetPasswordOtp(
@@ -376,6 +380,101 @@ export class AuthService {
       );
 
       return [user.id, success];
+    } catch (error) {
+      throw new BadRequestException(
+        EcomResponse.BadRequest(error.name, error.message, error.status),
+      );
+    }
+  }
+
+  async resetPassword(body: PasswordResetDto): Promise<Users> {
+    try {
+      const { otp, password } = body;
+
+      const otpDoc = await this.otpRepo.findOne({ where: { otp: otp } });
+      if (!otpDoc) {
+        throw new BadRequestException(
+          EcomResponse.BadRequest(
+            'Not Found Error',
+            'Incorrect OTP entered',
+            '400',
+          ),
+        );
+      }
+      const { signupToken } = otpDoc;
+      const { id } = await this.jwtHelperService.verifyReset(signupToken);
+      const user: Users = await this.userRepository.findOne({ where: { id } });
+      if (!user) {
+        throw new NotFoundException(
+          EcomResponse.NotFoundRequest(
+            'Not Found Error',
+            'User does not exist on the server',
+            '404',
+          ),
+        );
+      }
+      const passwordPayload = {
+        newPassword: password,
+        oldPassword: user.password,
+      };
+      const hashedPassword = await this.jwtHelperService.newPasswordHash(
+        passwordPayload,
+      );
+      await this.userRepository.update(id, { password: hashedPassword });
+      await this.otpRepo.delete({ otp: otp });
+
+      return user;
+    } catch (error) {
+      throw new BadRequestException(
+        EcomResponse.BadRequest(error.name, error.message, error.status),
+      );
+    }
+  }
+
+  async deletUser(email: string) {
+    try {
+      const user = await this.userRepository.findOne({ where: { email } });
+      if (!user) {
+        throw new NotFoundException(
+          EcomResponse.NotFoundRequest(
+            'Useer Not Found',
+            'User does not exist on the server',
+            '404',
+          ),
+        );
+      }
+      //  send Delete request to the profile service to delete the user profile
+      // const coreUrl = `${this.configService.get<string>(
+      //   configConstant.baseUrls.coreService,
+      // )}/profile/${user.profileID}`;
+
+      // console.log('connecting to core profile ...');
+      // const profileResponse = await this.httpService
+      //   .axiosRef({
+      //     method: 'delete',
+      //     url: coreUrl,
+      //   })
+      //   .catch((error) => {
+      //     throw new BadRequestException(
+      //       EcomResponse.BadRequest(error.name, error.message, error.status),
+      //     );
+      //   });
+
+      // const profileResponse = await this.httpService.axiosRef
+      //   .delete(coreUrl)
+      //   .catch((err) => console.log(err.response));
+      // console.log(profileResponse);
+      // if (profileResponse.status !== 200) {
+      //   throw new BadRequestException(
+      //     EcomResponse.BadRequest(
+      //       'Profile Not deleted',
+      //       'Error occured while deleting user Profile',
+      //       '400',
+      //     ),
+      //   );
+      // }
+
+      return await this.userRepository.delete({ email });
     } catch (error) {
       throw new BadRequestException(
         EcomResponse.BadRequest(error.name, error.message, error.status),

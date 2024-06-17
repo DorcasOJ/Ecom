@@ -5,7 +5,6 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { ConfigModule } from '@nestjs/config';
 // import { DatabaseModule } from '@app/common';
-import { RmqModule } from '@app/common/rmq/rmg.module';
 import { EmailVerificationModule } from './email-verification/email-verification.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppDataSource } from 'ormconfig';
@@ -20,7 +19,6 @@ import { AppDataSource } from 'ormconfig';
     TypeOrmModule.forRoot(AppDataSource.options),
     AuthModule,
     UsersModule,
-    RmqModule,
     EmailVerificationModule,
   ],
   controllers: [IdentityController],

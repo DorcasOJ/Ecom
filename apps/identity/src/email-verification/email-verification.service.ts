@@ -232,30 +232,11 @@ export class EmailVerificationService {
       await this.otpRepo.save(otpSetup);
 
       await this.sendMail(user, './reset', otp);
-
-      // await this.mailerService
-      //   .sendMail({
-      //     to: userEmail,
-      //     subject: 'Confirm Email',
-      //     template: './reset',
-      //     context: {
-      //       name: firstName,
-      //       otp: otp,
-      //       url: url,
-      //     },
-      //   })
-      //   .then((success) => console.log(success, 'successfully sent mail'))
-      //   .catch((err) => console.log(err, 'error sending mail'));
-
-      // const text = `Hi ${firstName}, \nEnter the OTP below in OTP column provided in the reset page: \n\n\n  ${otp}`;
-      // const mailData = {
-      //   email: userEmail,
-      //   subject: 'OTP for Password Reset',
-      //   text: text,
-      // };
-
-      // notification url
-    } catch (error) {}
+    } catch (error) {
+      throw new BadRequestException(
+        EcomResponse.BadRequest('Internal Server Error', error.message, '500'),
+      );
+    }
   }
 
   async sendMail(user: Users, template: string, otp: string) {

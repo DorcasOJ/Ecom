@@ -1,7 +1,6 @@
-import { Body, Controller, Get, Post, Query } from '@nestjs/common';
+import { Controller, Get, Query } from '@nestjs/common';
 import { ApiOperation } from '@nestjs/swagger';
 import { EmailVerificationService } from './email-verification.service';
-import { SignupOTPDto } from './dto/email-token.dto';
 import { EcomResponse } from '@app/common';
 
 @Controller('email-verification')
