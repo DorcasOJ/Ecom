@@ -1,5 +1,5 @@
 import { BeforeInsert, Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
-import { SharedEntity } from './sharedEntity';
+import { SharedEntity } from '../sharedEntity';
 import { Users } from './users.entity';
 import { getBrowser, getLocation, getOS } from '@app/common/helpers/user-info';
 

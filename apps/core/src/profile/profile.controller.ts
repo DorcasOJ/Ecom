@@ -14,7 +14,7 @@ import { ProfileService } from './profile.service';
 import { ApiOperation } from '@nestjs/swagger';
 import { CreateProfileDto } from './dto/create-profile.dto';
 import { EcomResponse, Ok } from '@app/common';
-import { Profile } from '@app/common/database/entities/profile.entity';
+import { Profile } from '@app/common/database/entities/core/profile.entity';
 import { IdCheck } from '@app/common/decorators/idcheck.decorator';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { AuthorizationGuard } from '@app/common/guards/authorization.guard';

@@ -1,4 +1,4 @@
-import { Profile } from '@app/common/database/entities/profile.entity';
+import { Profile } from '@app/common/database/entities/core/profile.entity';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';

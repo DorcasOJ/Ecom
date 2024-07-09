@@ -1,6 +1,6 @@
+import { NotificationStatus } from './../../enums/identity/notification.status.enum';
 import { Column, Entity } from 'typeorm';
-import { SharedEntity } from './sharedEntity';
-import { NotificationStatus } from '../enums/notification.status.enum';
+import { SharedEntity } from '../sharedEntity';
 
 @Entity()
 export class Notification extends SharedEntity {

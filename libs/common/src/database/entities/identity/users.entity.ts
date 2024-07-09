@@ -1,9 +1,9 @@
-import { MaxLength, MinLength } from 'class-validator';
+// import { MaxLength, MinLength } from 'class-validator';
 import { BeforeInsert, OneToMany, Entity, Column } from 'typeorm';
 import { Exclude } from 'class-transformer';
 // import { randomBytes, pbkdf2Sync } from 'crypto';
-import { SharedEntity } from './sharedEntity';
-import { UserRole } from '../enums/userRole.enum';
+import { SharedEntity } from '../sharedEntity';
+import { UserRole } from '../../enums/identity/userRole.enum';
 import { LoginHistory } from './loginHistory.entity';
 import { pbkdf2Sync, randomBytes } from 'crypto';
 

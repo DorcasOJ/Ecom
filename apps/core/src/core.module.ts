@@ -4,7 +4,7 @@ import { CoreService } from './core.service';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppDataSource } from 'ormconfig';
-import { Profile } from '@app/common/database/entities/profile.entity';
+import { Profile } from '@app/common/database/entities/core/profile.entity';
 import { ProfileModule } from './profile/profile.module';
 
 @Global()

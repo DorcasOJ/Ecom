@@ -1,5 +1,5 @@
 import { Column, Entity } from 'typeorm';
-import { SharedEntity } from './sharedEntity';
+import { SharedEntity } from '../sharedEntity';
 
 @Entity()
 export class OneTimePassword extends SharedEntity {
