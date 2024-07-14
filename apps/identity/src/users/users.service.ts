@@ -21,6 +21,10 @@ export class UsersService {
     return await this.userRepo.find();
   }
 
+  async getUserByEmail(email: string) {
+    return await this.userRepo.findOne({ where: { email: email } });
+  }
+
   // async getAdminUsers(
   //   page: number,
   //   limit: number,

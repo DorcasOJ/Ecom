@@ -81,7 +81,6 @@ export class AuthService {
         EcomResponse.BadRequest('Internal Server Error', error.message, '500'),
       );
     }
-    // const userData = Object.assign(new Users(), user);
   }
 
   async login(
@@ -102,18 +101,14 @@ export class AuthService {
           EcomResponse.BadRequest('Not found', 'Invalid Credentials!'),
         );
 
-      // check if email is verified
-      if (!user.isEmailVerified) {
-        await this.emailVerificationService.sendVerificationLink(user);
-        return { ...user, isEmailVerified: false };
-      }
-
       // compare password if email is verified
       const hash = await this.jwtHelperService.hashPassword(
         dto.password,
         user.password.split(':')[0],
       );
       const isPasswordCorrect = hash == user.password;
+      // console.log(isPasswordCorrect, hash, user.password);
+
       if (!isPasswordCorrect)
         throw new BadRequestException(
           EcomResponse.BadRequest('Access Denied', 'Incorrect Credentials'),
@@ -136,6 +131,11 @@ export class AuthService {
       await this.userRepository.update(user.id, {
         refreshToken: user.refreshToken,
       });
+
+      // check if email is verified
+      if (!user.isEmailVerified) {
+        await this.emailVerificationService.sendVerificationLink(user);
+      }
 
       return {
         ...tokens,
@@ -215,12 +215,11 @@ export class AuthService {
         this.configService.get(configConstant.google.clientID),
         this.configService.get(configConstant.google.secretID),
       );
-      const getTokenFromClient = await client.getToken(dto.token);
-      const verifyClientToken = await client.verifyIdToken({
-        idToken: getTokenFromClient.tokens.id_token,
+      const ticket = await client.verifyIdToken({
+        idToken: dto.token,
         audience: await this.configService.get(configConstant.google.clientID),
       });
-      const { name, email } = verifyClientToken.getPayload();
+      const { email, given_name, family_name, picture } = ticket.getPayload();
 
       // find existing user
       const googleUser = await this.userRepository.findOne({
@@ -231,8 +230,8 @@ export class AuthService {
         const googleUser = this.userRepository.create({
           id: uuidv4(),
           email: email,
-          firstName: name.split(' ')[0],
-          lastName: name.split(' ')[1],
+          firstName: given_name,
+          lastName: family_name,
           isGoogleAuthUser: true,
           isEmailVerified: true,
           userOTP: null,
@@ -247,7 +246,7 @@ export class AuthService {
         await this.userRepository.update(newUser.id, {
           refreshToken: tokens.refresh,
         });
-        this.createLoginHistory(dto.userInfo, newUser);
+        this.createLoginHistory({ ip_address: ip_address }, newUser);
 
         return {
           ...tokens,
@@ -263,8 +262,9 @@ export class AuthService {
           googleUser,
           values,
         );
-        this.createLoginHistory(dto.userInfo, googleUser);
-        googleUser.refreshToken = (await tokens).refresh;
+        this.createLoginHistory({ ip_address: ip_address }, googleUser);
+        
+        googleUser.refreshToken = tokens.refresh;
         return {
           ...tokens,
           userId: googleUser.id,

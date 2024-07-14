@@ -41,7 +41,7 @@ export class ProfileController {
     return EcomResponse.Ok(profile, 'Ok', 200);
   }
 
-  @Patch(':profileId')
+  @Patch('/:profileId')
   //   @IdCheck('profileId')
   // @UseGuards(AuthorizationGuard)
   @ApiOperation({ summary: 'Update an existing profile' })

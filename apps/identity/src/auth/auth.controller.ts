@@ -69,7 +69,7 @@ export class AuthController {
     return EcomResponse.Ok('success', 'Logged out successfully', '200');
   }
 
-  s
+
 
   @Post('/forgot')
   @ApiOperation({ summary: 'Submit registered email for password reset' })

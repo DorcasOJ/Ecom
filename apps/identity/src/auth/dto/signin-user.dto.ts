@@ -14,7 +14,7 @@ export class SigninUserDto {
 
   @ApiProperty({ example: 'admin|user' })
   @IsOptional()
-  user_role: UserRole;
+  user_role: UserRole.user;
 
   // @ApiProperty()
   // @IsOptional()

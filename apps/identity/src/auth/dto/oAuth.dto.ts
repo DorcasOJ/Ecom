@@ -7,7 +7,7 @@ export class OAuthDto {
   @ApiProperty()
   token: string;
 
-  @IsOptional()
-  @ApiProperty()
-  userInfo: UserInfo;
+  // @IsOptional()
+  // @ApiProperty()
+  // userInfo: UserInfo;
 }
