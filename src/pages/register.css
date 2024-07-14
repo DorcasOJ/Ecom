@@ -1,0 +1,11 @@
+form h1 {
+    font-size: 2em;
+}
+
+.inputDiv {
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    justify-content: center;
+    border: 1px solid blue;
+}

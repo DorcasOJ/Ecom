@@ -1,32 +1,164 @@
 .formInput {
     display: flex;
     flex-direction: column;
-    width: 280px;
+    /* border: 1px solid red; */
+    width: 100%;
+    /* padding: 13px 0; */
+}
+
+.registerInput {
+    display: flex;
+    flex-direction: column;
+    width: 46.5%;
+    /* border: 1px solid red; */
+}
+
+.registerInput:nth-child(1)
+{
+    margin-right: 1rem;
+}
+
+.registerInput:nth-child(3) {
+    width: 97.5%;
+    padding: 0 0;
+}
+
+.formInput:nth-child(2), 
+.formInput:nth-child(4) {
+    width: 90%;
+    padding: 0 0;
+}
+
+.registerInput:nth-child(4), .registerInput:nth-child(6) {
+    width: 90%;
+    padding: 0 0;
+}
+
+/* checkbox */
+/* .registerInput:nth-child(5), .registerInput:nth-child(7) {
+    width: 8%;
+    height: 33px;
+    cursor: pointer;
+    display: flex;
+    align-items: start;
+    justify-content: start;
+    padding: 0 0;
+} */
+
+.registerInput input {
+    width: 100%;
+}
+
+
+
+.passwordShow {
+    /* position: fixed;
+    text-align: right;
+    right: 180px;
+    border: 1px solid red; */
+
 }
 
 input {
-    padding: 15px;
-    margin: 10px 0;
-    border-radius: 5px;
-    border: 1px solid gray;
+    border: none;
+    /* border: 1px solid gray; */
+    display: block; 
+    padding: 6px;
+    margin: 6px 0px;
+    color: #000;
+    background-color: transparent;
+    font-size: 12px;
+    text-align: center;
+    border-bottom: 1px solid gray;
+    outline: none;
+    
 }
 
-label {
+input::placeholder {
     font-size: 12px;
-    color: gray;
+    text-align: center;
 }
 
-span {
-    font-size: 12px;
-    padding: 3px;
-    color: red;
+/* label {
+    font-size: 14px;
+    color: #000;
+    font-weight: 500;
+    
+} */
+
+.formInput .errorMsg, .registerInput .errorMsg, .showErrorMsg {
+    font-size: 10px;
+    text-align: center;
+    padding-bottom: 2px 0;
+    /* color: red; */
     display: none;
+    line-height: 12.5px;
+}
+
+/* input[type="checkbox"] {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+} */
+
+input:valid[focused=true] {
+    outline: none;
+    border-bottom: 1px solid  rgb(144, 5, 144);
 }
 
 input:invalid[focused="true"]{
-    border: 1px solid red;
+    outline: none;
+  /* border-bottom: .5px solid red; */
 }
 
-input:invalid[focused="true"] ~ span {
-    display: block
+input:invalid[focused="true"] ~ .showErrorMsg {
+    outline: none;
+    display: block;
+    color: red;
+    
 }
+
+
+@media only screen and (max-width: 500px) {
+    .registerInput {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .registerInput:nth-child(1),
+    .registerInput:nth-child(2),
+    .registerInput:nth-child(3),
+  {
+        width: 100%;
+    }
+
+    .registerInput:nth-child(1){
+        margin-right: 0;
+    }
+
+    .registerInput:nth-child(4),
+    .registerInput:nth-child(6)
+  {
+        width: 85%;
+    }
+
+    .formInput:nth-child(2), 
+    .formInput:nth-child(4) {
+        width: 90.1%;
+        padding: 0 0;
+    }
+  } 
+
+  @media  only screen and (max-width: 300px) {
+
+    .formInput:nth-child(2), 
+    .formInput:nth-child(4) {
+        width: 75%;
+        padding: 0 0;
+    }
+
+    .passwordSpan {
+      font-size: 7px;
+    }
+  }

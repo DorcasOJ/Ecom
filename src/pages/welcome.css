@@ -1,0 +1,178 @@
+.welcomePage {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  /* background-image: url("../assets/bg.jpeg"); */
+  /* background-size: cover;
+  background-position: center; */
+  background: linear-gradient(
+    rgba(243, 210, 240, 0.881),
+    rgba(228, 187, 210, 0.895),
+    rgba(228, 167, 195, 0.895),
+    rgb(231, 157, 231),
+    rgba(223, 129, 223, 0.908),
+    rgba(219, 125, 219, 0.944)
+  );
+}
+
+.loginContainer {
+  /* display: grid;
+    place-items: center; */
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 15px;
+  width: 80%;
+  height: 85%;
+  max-width: 700px ;
+  background-color: #fff;
+  box-shadow: 4px 4px 4px 3px rgba(219, 125, 219, 0.49);
+  -webkit-box-shadow: 4px 4px 4px 3px rgba(219, 125, 219, 0.49);
+  -moz-box-shadow: 4px 4px 4px 3px rgba(219, 125, 219, 0.49);
+  position: sticky;
+  /* overflow: auto; */
+  /* overflow-y: auto; 
+  overflow-x: auto; */
+}
+
+.login {
+  display: flex;
+  height: 100%;
+  width: 60%;
+  border-top-right-radius: 15px;
+    border-bottom-right-radius: 15px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+  /* background-color: #fff; */
+  color: #000;
+  font-size: 11px;
+  /* padding: 0px 60px; */
+  
+}
+
+form h1 {
+  font-size: 1rem;
+  padding-bottom: 3px;
+}
+
+form p {
+  padding-bottom: 10px;
+}
+
+/* .loginForm {
+  width: 75%;
+  display: flex;
+  fl
+} */
+
+.registerForm, .loginForm {
+  display: flex;
+  width: 90%;
+  flex-wrap: wrap;
+  position: relative;
+}
+
+.rounded-checkbox {
+  /* width:35px;
+  height: 35px;
+  border-radius: 50%;
+  vertical-align: middle;
+  border: 1px solid black;
+  appearance: none;
+  -webkit-appearance: none;
+  outline: none;
+  cursor: pointer; */
+  
+}
+
+/* .rounded-checkbox:checked {
+  appearance: auto;
+  clip-path: circle(50% at 50% 50%);
+  background-color:  rgb(77, 1, 77);
+} */
+
+.passwordSpan {
+  display: flex;
+  justify-content: center;
+  align-self: flex-start;
+  /* margin-top: auto; */
+  font-size: 9px;
+  color: rgb(77, 1, 77);
+  cursor: pointer;
+  width: 23px;
+  height: 24px;
+  /* position: absolute;
+  right: 0;
+  top: 60%;
+  border: 1px solid red; */
+}
+
+
+
+/* input[type="checkbox"] {
+  width: 100%;
+  height: 100%;
+ border-radius: 50%;
+} */
+
+.Lgbutton {
+  width: 93%;
+  padding: 8px;
+  border: none;
+  background-color: rgb(77, 1, 77);
+  color: #fff;
+  border-radius: 10px;
+  outline: none;
+  /* font-weight: bold; */
+  font-size: 13px;
+  cursor: pointer;
+  margin: 20px 0;
+}
+
+.Lgbutton:hover, .Lgbutton:focus {
+  outline-style: none;
+}
+
+.loginLink {
+  cursor: pointer;
+  color: rgb(77, 1, 77);
+  font-size: 12px;
+}
+
+.signOthers {
+ margin: 10px 0;
+}
+
+.signOthers .googleLogin {
+  font-size: 12px;
+}
+
+@media  only screen and (max-width: 600px) {
+  .loginContainer {
+    width: 95%;
+    height: 97%;
+  }
+  form p {
+    line-height: 14px;
+    text-align: center;
+  }
+ 
+}
+
+@media  only screen and (max-width: 300px) {
+
+  .passwordSpan {
+    font-size: 8px;
+  }
+}

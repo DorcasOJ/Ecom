@@ -1,9 +1,10 @@
 import {useState} from "react";
 import FormInput from "../components/FormInput";
-import inputs from "../utils/inputFormat";
+import { inputs } from "../utils/inputFormat";
 import {
   Link,
 } from "react-router-dom";
+
 
 const Login = () => {
     const [loginValues, setLoginValues] = useState({
@@ -21,9 +22,11 @@ const Login = () => {
     }
   return (
     <div className="loginContainer">
+ 
     <div className="login">
       <form onSubmit={handleSubmit}>
-        <h1>Login</h1>
+        <h1>
+          Login</h1>
         {newInputs.map((input) => (
             <FormInput
             key={input.id}
