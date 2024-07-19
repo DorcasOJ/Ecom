@@ -69,8 +69,6 @@ export class AuthController {
     return EcomResponse.Ok('success', 'Logged out successfully', '200');
   }
 
-
-
   @Post('/forgot')
   @ApiOperation({ summary: 'Submit registered email for password reset' })
   async forgotPassword(
@@ -95,10 +93,17 @@ export class AuthController {
     );
   }
 
+  @Post('/changePassword')
+  @ApiOperation({ summary: 'Change Password' })
+  async changeUser(@Body() body: ChangePasswordDto) {
+    const user = await this.authService.changePassword(body);
+    return EcomResponse.Ok(user, 'done', '200');
+  }
+
   @Delete('/delete-user')
   @ApiOperation({ summary: 'Delete a user' })
-  async deleteUserr(@Body() { email }: DeleteUserDto) {
-    await this.authService.deletUser(email);
+  async deleteUser(@Body() { email }: DeleteUserDto) {
+    await this.authService.deleteUser(email);
     return EcomResponse.Ok('user deleted successfully', '200');
   }
 }

@@ -101,6 +101,13 @@ export class AuthService {
           EcomResponse.BadRequest('Not found', 'Invalid Credentials!'),
         );
 
+      // google user
+      if (user.password === null) {
+        throw new BadRequestException(
+          EcomResponse.BadRequest('Access Denied', 'Reset Password to Login'),
+        );
+      }
+
       // compare password if email is verified
       const hash = await this.jwtHelperService.hashPassword(
         dto.password,
@@ -246,7 +253,7 @@ export class AuthService {
         await this.userRepository.update(newUser.id, {
           refreshToken: tokens.refresh,
         });
-        this.createLoginHistory({ ip_address: ip_address }, newUser);
+        this.createLoginHistory({ ip_address: values.ipAddress }, newUser);
 
         return {
           ...tokens,
@@ -262,8 +269,8 @@ export class AuthService {
           googleUser,
           values,
         );
-        this.createLoginHistory({ ip_address: ip_address }, googleUser);
-        
+        this.createLoginHistory({ ip_address: values.ipAddress }, googleUser);
+
         googleUser.refreshToken = tokens.refresh;
         return {
           ...tokens,
@@ -309,8 +316,8 @@ export class AuthService {
     }
   }
 
-  async changePassword(token: string, dto: ChangePasswordDto) {
-    const refreshToken = token.split(' ')[1];
+  async changePassword(dto: ChangePasswordDto) {
+    const refreshToken = dto.token.split(' ')[1];
     try {
       const { id, password } = await this.userRepository.findOne({
         where: { refreshToken: refreshToken },
@@ -325,7 +332,7 @@ export class AuthService {
         throw new BadRequestException(
           EcomResponse.BadRequest(
             'Access Denied',
-            'provide a new password',
+            'provide a correct password',
             '401',
           ),
         );
@@ -358,28 +365,10 @@ export class AuthService {
           ),
         );
       }
-      // sign a token and check if it already exist
-      const existingToken = await this.jwtHelperService.signReset({
-        id: user.id,
-        userEmail: user.email,
-      });
 
-      // if an otp with this signuptoken exists in the db, delete it
-      if (existingToken) {
-        await this.otpRepo.delete({ signupToken: existingToken });
-      }
-      const otp = Math.floor(Math.random() * 899999 + 100000).toString();
+      await this.emailVerificationService.sendResetPasswordOtp(user);
 
-      const emailPayload = {
-        user: user,
-        otp: otp,
-      };
-
-      const success = await this.emailVerificationService.sendResetPasswordOtp(
-        emailPayload,
-      );
-
-      return [user.id, success];
+      return { id: user.id };
     } catch (error) {
       throw new BadRequestException(
         EcomResponse.BadRequest(error.name, error.message, error.status),
@@ -431,7 +420,7 @@ export class AuthService {
     }
   }
 
-  async deletUser(email: string) {
+  async deleteUser(email: string) {
     try {
       const user = await this.userRepository.findOne({ where: { email } });
       if (!user) {

@@ -1,4 +1,4 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get, Post, Query } from '@nestjs/common';
 import { ApiOperation } from '@nestjs/swagger';
 import { EmailVerificationService } from './email-verification.service';
 import { EcomResponse } from '@app/common';
@@ -24,4 +24,5 @@ export class EmailVerificationController {
     const users = await this.emailVerificationService.getotp();
     return EcomResponse.Ok(users, 'done', 200);
   }
+
 }

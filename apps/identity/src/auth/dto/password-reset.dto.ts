@@ -9,14 +9,14 @@ import {
 
 export class PasswordResetDto {
   @IsString()
-  @IsNotEmpty({ message: 'password cannot be empty' })
+  @IsNotEmpty({ message: 'otp cannot be empty' })
   @ApiProperty()
   otp: string;
 
   @IsString()
   @IsNotEmpty({ message: 'password cannot be empty' })
   @ApiProperty()
-  @MinLength(8, {
+  @MinLength(6, {
     message:
       'Password is too short. Minimal length is $constraint1 characters, but actual is $value',
   })

@@ -34,9 +34,19 @@ export class EmailVerificationService {
     private mailerService: MailerService,
   ) {}
 
+  async creatOtp(signupToken: string) {
+    const otp = Math.floor(Math.random() * 899999 + 100000).toString();
+
+    const otpSetup = this.otpRepo.create({
+      otp: otp,
+      signupToken: signupToken,
+    });
+    return await this.otpRepo.save(otpSetup);
+  }
+
   /*
    * sendVerificationLink - send verification token to a newly registered user
-   * @Params: email - email created by the user
+   * @Params: user
    * return - return a http request to send email notification
    */
 
@@ -48,34 +58,13 @@ export class EmailVerificationService {
         secret: this.configService.get(configConstant.jwt.verify_secret),
         expiresIn: this.configService.get(configConstant.jwt.otp_time),
       });
-      const otp = Math.floor(Math.random() * 899999 + 100000).toString();
+      const otpSetup = await this.creatOtp(signupToken);
+      await this.UserRepo.update(user.id, { ...user, userOTP: otpSetup.otp });
+      const url = `${this.configService.get<string>(
+        configConstant.baseUrls.decodeTokenUrl,
+      )}${otpSetup.otp}`;
 
-      const otpSetup = this.otpRepo.create({
-        otp: otp,
-        signupToken: signupToken,
-      });
-      await this.otpRepo.save(otpSetup);
-
-      await this.UserRepo.update(user.id, { ...user, userOTP: otp });
-
-      await this.sendMail(user, './confirmation', otp);
-
-      // await this.mailerService
-      //   .sendMail({
-      //     to: user.email,
-      //     // from: 'noreply@example.com',
-      //     subject: 'Confirm Email',
-      //     template: './confirmation',
-      //     context: {
-      //       name: user.firstName,
-      //       url: `${this.configService.get<string>(
-      //         configConstant.baseUrls.decodeTokenUrl,
-      //       )}${otp}`,
-      //       otp: otp,
-      //     },
-      //   })
-      //   .then((success) => console.log('successfully sent mail'))
-      //   .catch((err) => console.log(err, 'error sending mail'));
+      await this.sendMail(user, './confirmation', otpSetup.otp, url);
     } catch (error) {
       throw new BadRequestException(
         EcomResponse.BadRequest('Internal Server Error', error.message, '500'),
@@ -218,20 +207,20 @@ export class EmailVerificationService {
     return data;
   }
 
-  async sendResetPasswordOtp(emailPayload: any) {
-    const { user, otp } = emailPayload;
+  async sendResetPasswordOtp(user: Users) {
     try {
+       // sign a token and check if it already exist
       const resetToken = await this.jwtHelpers.signReset({
         id: user.id,
         userEmail: user.email,
       });
-      const otpSetup = this.otpRepo.create({
-        otp: otp,
-        signupToken: resetToken,
-      });
-      await this.otpRepo.save(otpSetup);
+      // if an otp with this signuptoken exists in the db, delete it
+      if (resetToken) {
+        await this.otpRepo.delete({ signupToken: resetToken });
+      }
+      const otpSetup = await this.creatOtp(resetToken);
 
-      await this.sendMail(user, './reset', otp);
+      await this.sendMail(user, './reset', otpSetup.otp, null);
     } catch (error) {
       throw new BadRequestException(
         EcomResponse.BadRequest('Internal Server Error', error.message, '500'),
@@ -239,7 +228,7 @@ export class EmailVerificationService {
     }
   }
 
-  async sendMail(user: Users, template: string, otp: string) {
+  async sendMail(user: Users, template: string, otp: string, url: string) {
     return await this.mailerService
       .sendMail({
         to: user.email,
@@ -248,13 +237,11 @@ export class EmailVerificationService {
         template: template,
         context: {
           name: user.firstName,
-          url: `${this.configService.get<string>(
-            configConstant.baseUrls.decodeTokenUrl,
-          )}${otp}`,
+          url: url,
           otp: otp,
         },
       })
-      .then((success) => console.log('successfully sent mail'))
+      .then(() => console.log('successfully sent mail'))
       .catch((err) => console.log(err, 'error sending mail'));
   }
 
