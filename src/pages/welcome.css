@@ -141,7 +141,7 @@ form p {
 }
 
 .Lgbutton:hover, .Lgbutton:focus {
-  outline-style: none;
+  outline: none;
 }
 
 .loginLink {
