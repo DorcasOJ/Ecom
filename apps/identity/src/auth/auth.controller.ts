@@ -77,7 +77,7 @@ export class AuthController {
     const response = await this.authService.forgetPassword(body.email);
     return EcomResponse.Ok(
       response,
-      "A Reset Link has been sent to the user's registered email",
+      'A Reset OTP has been sent to your registered email',
       '200',
     );
   }

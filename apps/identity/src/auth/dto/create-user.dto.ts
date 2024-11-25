@@ -13,12 +13,12 @@ import {
 export class CreateUserDto {
   @ApiProperty({ example: 'Jone' })
   @IsString()
-  @IsNotEmpty({ message: 'first nme cannot be empty' })
+  @IsNotEmpty({ message: 'first name cannot be empty' })
   firstName: string;
 
   @ApiProperty({ example: 'Doe' })
   @IsString()
-  @IsNotEmpty({ message: 'last nme cannot be empty' })
+  @IsNotEmpty({ message: 'last name cannot be empty' })
   lastName: string;
 
   @ApiProperty({ example: 'JoneDoe@email.com' })

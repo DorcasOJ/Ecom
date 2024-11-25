@@ -1,4 +1,11 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToOne } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToMany,
+  ManyToOne,
+  OneToOne,
+} from 'typeorm';
 import { SharedEntity } from '../sharedEntity';
 import { subCategory } from '../../enums/core/product-sub-category.enum';
 import { LikedProduct } from './likedProduct.entity';
@@ -6,6 +13,7 @@ import { ProductSpecification } from './prod-specs.entity';
 import { CustomerFeedback } from './custFeedback.entity';
 import { ProductSearchHistory } from './prodSearchHist.enum';
 import { Category } from './category.entity';
+import { OrderDetails } from './order-details.entity';
 
 Entity();
 export class Product extends SharedEntity {
@@ -72,7 +80,7 @@ export class Product extends SharedEntity {
   })
   subCategory: subCategory;
 
-  @ManyToOne(() => Category, (category) => category.product)
+  @ManyToOne(() => Category, (category) => category.products)
   category: Category;
 
   @Column()
@@ -97,4 +105,7 @@ export class Product extends SharedEntity {
   )
   @JoinColumn({ name: 'prodSearchHistId' })
   prodSearchHist: ProductSearchHistory;
+
+  @ManyToMany(() => OrderDetails, (orderDetails) => orderDetails.products)
+  orderDetails: OrderDetails[];
 }

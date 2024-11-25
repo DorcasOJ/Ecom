@@ -1,10 +1,21 @@
-import { Column, Entity, JoinColumn, OneToMany, OneToOne } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  JoinTable,
+  ManyToMany,
+  ManyToOne,
+  OneToMany,
+  OneToOne,
+} from 'typeorm';
 import { SharedEntity } from '../sharedEntity';
 import { ApiProperty } from '@nestjs/swagger';
 import { Cart } from './cart.entity';
 import { PaymentMethod } from './payMethod.entity';
 import { DeliveryDetails } from './deliveryDetails.entity';
 import { CustomerAddress } from './custAddress.entity';
+import { Profile } from './profile.entity';
+import { Product } from './product.entity';
 
 Entity();
 export class OrderDetails extends SharedEntity {
@@ -39,4 +50,12 @@ export class OrderDetails extends SharedEntity {
   @OneToOne(() => CustomerAddress, (custAddress) => custAddress.orderDetails)
   @JoinColumn({ name: 'custAddressId' })
   custAddress: CustomerAddress;
+
+  // @ManyToOne(() => Profile, (profile) => profile.orderDetails)
+  // @JoinColumn({ name: 'profile_order_id' })
+  // profile: Profile;
+
+  @ManyToMany(() => Product, (product) => product.orderDetails)
+  @JoinTable({ name: 'order_product' })
+  products: Product[];
 }

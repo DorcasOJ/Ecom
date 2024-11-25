@@ -12,5 +12,5 @@ export class Category extends SharedEntity {
 
   @OneToMany(() => Product, (product) => product.category)
   @JoinColumn()
-  product: Product[];
+  products: Product[];
 }

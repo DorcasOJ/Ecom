@@ -1,11 +1,12 @@
 // import { MaxLength, MinLength } from 'class-validator';
-import { BeforeInsert, OneToMany, Entity, Column } from 'typeorm';
+import { BeforeInsert, OneToMany, Entity, Column, OneToOne } from 'typeorm';
 import { Exclude } from 'class-transformer';
 // import { randomBytes, pbkdf2Sync } from 'crypto';
 import { SharedEntity } from '../sharedEntity';
 import { UserRole } from '../../enums/identity/userRole.enum';
 import { LoginHistory } from './loginHistory.entity';
 import { pbkdf2Sync, randomBytes } from 'crypto';
+import { Profile } from '../core/profile.entity';
 
 @Entity()
 export class Users extends SharedEntity {
@@ -48,6 +49,9 @@ export class Users extends SharedEntity {
     onDelete: 'CASCADE',
   })
   loginHistories: LoginHistory[];
+
+  @OneToOne(() => Profile, (profile) => profile.user)
+  profile: Profile
 
   @Column({ unique: true, nullable: true })
   @Exclude()
